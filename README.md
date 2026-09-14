@@ -123,10 +123,40 @@ The code demonstrates:
 - Auditability for payments/bookings.
 
 ## B. Noun–Verb Analysis Table
-(See source files for implemented methods; classes and method names are present in the listed files.)
+
+| Class | Implemented methods |
+| --- | --- |
+| `Cinema` | `addMovie()`, `addScreen()`, `addShow()`, `displayMovies()`, `displayScreens()`, `displayShows()`, `findShow()` |
+| `Screen` | `createSeats()`, `displaySeats()`, `displayAvalableSeats()`, `getSeat()`, `getScreenNumber()`, `getSeats()` |
+| `Seat` | `isAvailable()`, `bookSeat()`, `freeSeat()`, `getSeatNumber()`, `getType()`, `getTypeName()`, `getPrice()`, `display()` |
+| `Movie` | `getDuration()`, `getMovie()`, `getLang()`, `displayMovie()` |
+| `Show` | `createShowSeats()`, `displayShow()`, `displaySeats()`, `isSeatAvailable()`, `getShowSeat()`, `getStartTime()`, `getMovie()`, `getScreen()`, `getShowID()` |
+| `ShowSeat` | `isAvailable()`, `display()`, `bookSeat()`, `releaseSeat()`, `getSeat()` |
+| `Customer` | `displayCustomer()` |
+| `Booking` | `displayBooking()`, `getTotalAmount()`, `getShow()`, `getSeat()` |
+| `PaymentType` | `pay()`, `getType()` |
+| `Upi, card, Cash` | `pay()`, `getType()` |
+| `PriceCalculator` | `calculatePrice()` |
+| `TicketPrinter` | `DisplayTicket()` |
+| `BookingService` | stores a mapping from customers to their bookings |
 
 ## C. Relationship Table
-(Object relationships mirror domain concepts: cinemas aggregate screens/movies, shows compose show-seats, bookings associate shows and seats, payments implement a common interface, etc.)
+
+| Relationship | Type | Justification |
+| --- | --- | --- |
+| `Cinema` → `Movie` | Aggregation | Cinema maintains a collection of movies independent of individual shows. |
+| `Cinema` → `Screen` | Aggregation | Screens are managed by the cinema. |
+| `Cinema` → `Show` | Aggregation | Shows are scheduled under a cinema's screens. |
+| `Screen` → `Seat` | Composition | A screen creates and owns its fixed set of seats. |
+| `Show` → `Movie` | Association | A show references the movie being screened. |
+| `Show` → `Screen` | Association | A show runs on a particular screen layout. |
+| `Show` → `ShowSeat` | Composition | Shows generate show-specific seat instances for availability tracking. |
+| `ShowSeat` → `Seat` | Association | Each ShowSeat corresponds to a physical Seat. |
+| `Booking` → `Show` | Association | Bookings reference the selected show. |
+| `Booking` → `Seat` | Association | Bookings reference the selected seat. |
+| `TicketPrinter` → (`Customer`, `Booking`, `PaymentType`) | Association | Printer consumes these objects to produce ticket output. |
+| `Upi/card/Cash` → `PaymentType` | Inheritance | Concrete payment types implement a common payment abstraction. |
+| `PriceCalculator` → (`Movie`, `Show`, `Seat`) | Dependency | Pricing logic reads these entities to compute totals. |
 
 ## D-E. Diagrams
 Sequence and class diagrams live in the Diagram/ folder.
